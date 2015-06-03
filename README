@@ -1,0 +1,27 @@
+== Demiurge
+
+Demiurge is a program designed to simplify the management of the popular
+"Note tag" style of script configuration. It is also capable of acting as an
+extensible database if one possesses a basic knowledge of the way that JRuby
+interfaces with Java|scripters can even make use of Swing GUI designers to
+create custom tags, reducing both the amount of work involved and the knowledge
+of Java required.
+
+For the average user, Demiurge can be considered nothing but a fancy Database
+addon. For scripters, Demiurge opens up an extraordinarily wide realm of options
+that were closed in the past.
+
+Copyright (C) 2015  Enelvon
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License version 2 as published
+    by the Free Software Foundation.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.

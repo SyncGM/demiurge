@@ -1,0 +1,7 @@
+.ruby-version
+updates
+*.form
+*.class
+demiurge.jar
+plugins
+settings

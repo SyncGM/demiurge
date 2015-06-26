@@ -59,7 +59,7 @@ class TagTab < JPanel
           h2.delete_at(i) if h3.compact.empty?
           h1[@owner.selection].delete(key.to_sym) if h2.empty?
         else
-          if (block = @values[key][1][:params][4])
+          if (block = @values[key][1][:params][index][4])
             h3[index] = block.call(box.get_selected_item)
           else h3[index] = box.get_selected_item end
         end
@@ -90,7 +90,7 @@ class TagTab < JPanel
           h2.delete_at(i) if h3.compact.empty?
           h1[@owner.selection].delete(key.to_sym) if h2.empty?
         else
-          if (block = @values[key][1][:params][4])
+          if (block = @values[key][1][:params][index][4])
             h3[index] = block.call(field.get_text)
           else h3[index] = field.get_text end
         end
@@ -269,7 +269,7 @@ class TagTab < JPanel
   def build_combo_box(key, index, variable_data, author_data)
     entry = JComboBox.new
     add_combo_box_listener_to(key, index, entry)
-    @to_init << [entry, variable_data[3], variable_data[5]]
+    @to_init << [entry, variable_data[3]]
     entry.tool_tip_text = make_tool_tip(variable_data[2], author_data)
     entry
   end
@@ -376,9 +376,7 @@ class TagTab < JPanel
         unless @setting_data
           if @parent.project && m == :mouseClicked && e.click_count >= 2
             data = variable_data[3].call.compact
-            if variable_data[5]
-              data = data.collect { |v| variable_data[5].call(v) }.to_java
-            else data = data.select { |v| !v.empty? }.to_java end
+            data = data.select { |v| !v.empty? }.to_java
             if value = list_prompt(variable_data[1], variable_data[2], data)
               if list.selected_value == ' '
                 if (ind = list.model.index_of(' ')) == list.model.size - 1
@@ -503,9 +501,7 @@ class TagTab < JPanel
   def init_all
     @to_init.each do |c|
       data = [' '].concat(c[1].call.compact)
-      if c[2]
-        data = [' '].concat(data.collect { |v| c[2].call(v) }.to_java)
-      else data = data.select { |v| !v.empty? }.to_java end
+      data = data.select { |v| !v.empty? }.to_java
       c[0].model = DefaultComboBoxModel.new(data)
     end
     @to_init.clear
@@ -681,10 +677,20 @@ class TagTab < JPanel
             c.selected = true
             j += 1
           elsif c.is_a?(JComboBox)
-            c.selected_item = params[j]
+            value = params[j]
+            if (block = @values[k][1][:params][j][5])
+              value = block.call(value)
+            end
+            if value.is_a?(Integer) then c.selected_index = value
+            else c.selected_item = value
+            end
             j += 1
           elsif c.is_a?(JTextField) || c.is_a?(JTextArea) || c.is_a?(TextField)
-            c.set_text(params[j])
+            value = params[j]
+            if (block = @values[k][1][:params][j][5])
+              value = block.call(value)
+            end
+            c.set_text(value)
             c.revalidate
             j += 1
           end

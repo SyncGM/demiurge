@@ -4,8 +4,11 @@ $LOAD_PATH.unshift($ROOT_DIR + '/lib')
 
 # If Java updates have been released, use those. Otherwise, use the packaged
 # versions.
-if FileTest.directory?('updates/java') then $CLASSPATH << 'updates/java'
-else require 'java/demiurgeBase.jar' end
+if FileTest.directory?('updates/java')
+  require 'updates/java/demiurgeBase.jar'
+else
+  require 'java/demiurgeBase.jar'
+end
 
 # Require some basic necessities.
 require 'eidolon/rgss3'
@@ -112,8 +115,9 @@ if FileTest.directory?('updates')
 end
 
 # Creates the main frame and sets it to visible.
-window = DemiurgeWindow.new
-window.visible = true
+$editor_window = DemiurgeWindow.new
+$editor_window.visible = true
+$saving = false
 
 # Performs file monitoring and keeps the program alive until the window is
 # closed.
@@ -122,14 +126,14 @@ service = nil
 ignore = 'Demiurge.rvdata2'
 need_refresh = false
 while true
-  if window.loaded
-    window.loaded = false
-    path = Paths.get("#{window.project}/Data")
+  if $editor_window.loaded
+    $editor_window.loaded = false
+    path = Paths.get("#{$editor_window.project}/Data")
     service = FileSystems.getDefault().newWatchService
     path.register(service, StandardWatchEventKinds::ENTRY_MODIFY,
-                                          StandardWatchEventKinds::ENTRY_CREATE)
-  elsif window.closed
-    window.closed = false
+                                        StandardWatchEventKinds::ENTRY_CREATE)
+  elsif $editor_window.closed
+    $editor_window.closed = false
     if path
       path = nil
       service.close
@@ -141,7 +145,7 @@ while true
       need_refresh = true unless e.context == ignore
     end
     if need_refresh
-      window.reload
+      $editor_window.reload
       need_refresh = false
     end
     key.reset

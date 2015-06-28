@@ -17,19 +17,18 @@ module Updater
     file = java.io.BufferedReader.new(java.io.InputStreamReader.new(
                                           u.open_connection.get_input_stream))
     version = '0.0.0'
-    file = ''
+    update_file = ''
     while (line = file.read_line) 
       if line[/VERSION = '([\d\.]+)'/]
         version = $1
       elsif line[/UPDATE_FILE = '(.+?)'/]
-        file = $1
+        update_file = $1
       end
     end
     file.close
-    
     require './updates/version.rb' if FileTest.exist?('updates/version.rb')
     
-    return [version, file] if SES::Demiurge::VERSION < version
+    return [version, update_file] if SES::Demiurge::VERSION < version
     return false
   end
   
@@ -39,8 +38,7 @@ module Updater
   # @return [void]
   def self.update(version, file = nil)
     file = "#{version}.tar.gz" unless file
-    u = java.net.URL.new('https://github.com/sesvxace/demiurge/archive/' <<
-                                                                         file)
+    u = java.net.URL.new('https://github.com/sesvxace/demiurge/' << file)
     is = u.open_connection.get_input_stream.to_io
     File.open(file, 'w+b') do |f|
       IO.copy_stream(is, f)

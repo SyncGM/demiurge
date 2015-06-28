@@ -137,6 +137,7 @@ class DemiurgeWindow < com.github.sesvxace.demiurge.MainWindow
       tab.repaint
       tab.reset_all
     end
+    unload_plugins
     self.modified = false
   end
   
@@ -485,6 +486,7 @@ class DemiurgeWindow < com.github.sesvxace.demiurge.MainWindow
   #
   # @return [void]
   def reload
+    return if $saving
     remove_constants
     load_project_files(true)
     add_constants
@@ -610,6 +612,12 @@ class DemiurgeWindow < com.github.sesvxace.demiurge.MainWindow
     @input_dialog[1].visible = true
     @input_dialog[1] = nil
     @input_dialog[0].value
+  end
+  
+  # Aliased by plugins that add to the GUI to remove their additions.
+  #
+  # @return [void]
+  def unload_plugins
   end
   
   # Shows the plugin selection dialog.

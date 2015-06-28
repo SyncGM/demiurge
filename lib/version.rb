@@ -5,7 +5,7 @@ module SES
   module Demiurge
   
     # The version number of SES::Demiurge. Used by {Updater}.
-    VERSION = '1.0.0'
+    VERSION = '1.1.0'
     
     # Release Milestones
     # -------------------------------------------------------------------------
@@ -19,7 +19,12 @@ module SES
     #   - Support UI extensions
     #
     #
-    # v1.1 (06-??-2015)
+    # v1.1 (06-28-2015)
+    #   - Miscellaneous small fixes
+    #   - Expose more aspects of the Java GUI backend to Ruby
+    #
+    #
+    # v1.? (??-??-2015)
     #   - Change repeatable tags to a list-and-dialog based interface to reduce
     #       clutter and memory consumption
     #

@@ -7,6 +7,9 @@ module SES
     # The version number of SES::Demiurge. Used by {Updater}.
     VERSION = '1.1.0'
     
+    # The file to download for the update.
+    UPDATE_FILE = 'releases/download/v1.1/demiurge.v1.1-update.zip'
+    
     # Release Milestones
     # -------------------------------------------------------------------------
     # v1.0 (06-02-2015)

@@ -419,10 +419,14 @@ class DemiurgeWindow < com.github.sesvxace.demiurge.MainWindow
     Dir.new("#{project}/Data").entries.each do |e|
       next if FileTest.directory?("#{project}/#{e}") || !e[/^\w+\.rvdata2$/]
       name = e[/(.+)\.rvdata2/, 1].to_sym
-      File.open("#{project}/Data/#{e}", 'rb') do |data|
-        if e == 'Demiurge.rvdata2'
-          @demi_data = Marshal.load(data) unless skip_demiurge
-        else @data[name] = Marshal.load(data) end
+      begin
+        File.open("#{project}/Data/#{e}", 'rb:BOM|UTF-8') do |data|
+          if e == 'Demiurge.rvdata2'
+            @demi_data = Marshal.load(data) unless skip_demiurge
+          else @data[name] = Marshal.load(data) end
+        end
+      rescue
+        retry
       end
     end
   end

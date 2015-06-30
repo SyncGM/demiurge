@@ -4,11 +4,8 @@ $LOAD_PATH.unshift($ROOT_DIR + '/lib')
 
 # If Java updates have been released, use those. Otherwise, use the packaged
 # versions.
-if FileTest.directory?('updates/java')
-  require 'updates/java/demiurgeBase.jar'
-else
-  require 'java/demiurgeBase.jar'
-end
+if FileTest.directory?('updates/java') then $CLASSPATH << 'updates/java'
+else require 'java/demiurgeBase.jar' end
 
 # Require some basic necessities.
 require 'eidolon/rgss3'
@@ -22,7 +19,7 @@ java_import java.awt.Insets
 java_import java.awt.event.ActionListener
 java_import java.awt.event.ItemListener
 java_import java.awt.event.MouseListener
-java_import java.nio.file.FileSystems 
+java_import java.nio.file.FileSystems
 java_import java.nio.file.Paths
 java_import java.nio.file.StandardWatchEventKinds 
 java_import java.nio.file.WatchService
@@ -123,7 +120,8 @@ $saving = false
 # closed.
 path = nil
 service = nil
-ignore = 'Demiurge.rvdata2'
+ignore = Paths.get('Demiurge.rvdata2')
+context = ''
 need_refresh = false
 while true
   if $editor_window.loaded
@@ -142,7 +140,7 @@ while true
   elsif service
     key = service.take
     key.poll_events.each do |e|
-      need_refresh = true unless e.context == ignore
+      need_refresh = true unless e.context.equals(ignore)
     end
     if need_refresh
       $editor_window.reload

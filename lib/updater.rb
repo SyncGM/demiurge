@@ -1,7 +1,9 @@
 require 'fileutils'
 require 'version'
-require 'rubygems/package'
-require 'zlib'
+
+java_import java.io.FileInputStream
+java_import java.io.FileOutputStream
+java_import java.util.zip.ZipInputStream
 
 # Updater
 # -----------------------------------------------------------------------------
@@ -36,16 +38,16 @@ module Updater
   #
   # @param version [String] the version to which Demiurge should change
   # @return [void]
-  def self.update(version, file = nil)
-    file = "#{version}.tar.gz" unless file
-    u = java.net.URL.new('https://github.com/sesvxace/demiurge/' << file)
+  def self.update(version, file)
+    local = 'demiurge.v1.1-update.zip'
+    u = java.net.URL.new(file)
     is = u.open_connection.get_input_stream.to_io
-    File.open(file, 'w+b') do |f|
+    File.open(local, 'w+b') do |f|
       IO.copy_stream(is, f)
     end
     is.close
-    unpack_files(file)
-    FileUtils.rm(file)
+    unpack_files(local)
+    FileUtils.rm_f(local)
   end
   
   # Unpacks an installs an update archive.
@@ -53,19 +55,23 @@ module Updater
   # @param file [String] the name of the update archive
   # @return [void]
   def self.unpack_files(file)
-    e = Gem::Package::TarReader.new(Zlib::GzipReader.open(file))
-    e.rewind
-    e.each do |entry|
-      if entry.directory?
-        n = entry.full_name.sub("#{file}/") { '' }
-        FileUtils.mkdir_p(n)
-      elsif entry.file?
-        n = entry.full_name.sub("#{file}/") { '' }
-        File.open(n, 'w+') do |f|
-          f.write(entry.read)
-        end
+    buffer = ('0' * 1024).to_java_bytes
+    zip_contents = ZipInputStream.new(FileInputStream.new(file))
+    entry = zip_contents.next_entry
+    while entry
+      zip_file = entry.name
+      unless zip_file[/\.\w+$/]
+        FileUtils.mkdir_p(zip_file)
+        entry = zip_contents.next_entry
+        next
       end
+      output = FileOutputStream.new(zip_file)  
+      while ((i = zip_contents.read(buffer, 0, 1024)) > -1)
+        output.write(buffer, 0, i)
+      end
+      output.close
+      zip_contents.close_entry
+      entry = zip_contents.next_entry
     end
-    e.close
   end
 end

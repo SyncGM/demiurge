@@ -8,7 +8,7 @@ module SES
     VERSION = '1.1.0'
     
     # The file to download for the update.
-    UPDATE_FILE = 'releases/download/v1.1/demiurge.v1.1-update.zip'
+    UPDATE_FILE = 'https://github.com/sesvxace/demiurge/releases/download/v1.1/demiurge.v1.1-update.zip'
     
     # Release Milestones
     # -------------------------------------------------------------------------

@@ -7,7 +7,7 @@ directory 'demiurgeBase'
 
 desc 'Compile the demiurgeBase.jar file.'
 task :javac => 'demiurgeBase' do
-  sh "javac -d demiurgeBase #{Dir['java/**/*.java'.join(' ')}"
+  sh "javac -d demiurgeBase #{Dir['java/**/*.java'].join(' ')}"
   rm_f('lib/java/demiurgeBase.jar')
   cd('demiurgeBase')
   sh 'jar cf ../lib/java/demiurgeBase.jar *'

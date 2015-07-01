@@ -29,7 +29,6 @@ module Updater
     end
     file.close
     require './updates/version.rb' if FileTest.exist?('updates/version.rb')
-    
     return [version, update_file] if SES::Demiurge::VERSION < version
     return false
   end
@@ -39,7 +38,7 @@ module Updater
   # @param version [String] the version to which Demiurge should change
   # @return [void]
   def self.update(version, file)
-    local = 'demiurge.v1.1-update.zip'
+    local = file[/(demiurge.v[\w\.]+-update.zip)/, 1]
     u = java.net.URL.new(file)
     is = u.open_connection.get_input_stream.to_io
     File.open(local, 'w+b') do |f|
@@ -55,11 +54,12 @@ module Updater
   # @param file [String] the name of the update archive
   # @return [void]
   def self.unpack_files(file)
+    file_name = /#{file.sub(/\.\w+$/, '')}\/(.+)/
     buffer = ('0' * 1024).to_java_bytes
     zip_contents = ZipInputStream.new(FileInputStream.new(file))
     entry = zip_contents.next_entry
     while entry
-      zip_file = entry.name
+      zip_file = entry.name[file_name, 1] || entry.name
       unless zip_file[/\.\w+$/]
         FileUtils.mkdir_p(zip_file)
         entry = zip_contents.next_entry

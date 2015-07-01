@@ -1,47 +1,29 @@
-require 'fileutils'
-
 desc 'Build the program.'
-task :build do
-  FileUtils.mkdir_p('demiurgeBase')
-  java = Dir.glob('java/**/*.java').join(' ')
-  system("javac -d demiurgeBase #{java}")
-  FileUtils.rm_f('lib/java/demiurgeBase.jar')
-  FileUtils.cd('demiurgeBase')
-  system('jar cf ../lib/java/demiurgeBase.jar *')
-  FileUtils.cd('..')
-  FileUtils.rm_rf('demiurgeBase')
-  system('warble')
+task :build => :javac do
+  sh 'warble'
 end
+
+directory 'demiurgeBase'
 
 desc 'Compile the demiurgeBase.jar file.'
-task :javac do
-  FileUtils.mkdir_p('demiurgeBase')
-  java = Dir.glob('java/**/*.java').join(' ')
-  system("javac -d demiurgeBase #{java}")
-  FileUtils.rm_f('lib/java/demiurgeBase.jar')
-  FileUtils.cd('demiurgeBase')
-  system('jar cf ../lib/java/demiurgeBase.jar *')
-  FileUtils.cd('..')
-  FileUtils.rm_rf('demiurgeBase')
+task :javac => 'demiurgeBase' do
+  sh "javac -d demiurgeBase #{Dir['java/**/*.java'.join(' ')}"
+  rm_f('lib/java/demiurgeBase.jar')
+  cd('demiurgeBase')
+  sh 'jar cf ../lib/java/demiurgeBase.jar *'
+  cd('..')
+  rm_rf('demiurgeBase')
 end
 
+directory 'plugins'
+
 desc 'Run the program.'
-task :run do
-  system('java -jar demiurge.jar')
+task :run => 'plugins' do
+  sh 'java -jar demiurge.jar'
 end
 
 desc 'Build and run.'
-task :test do
-  FileUtils.mkdir_p('demiurgeBase')
-  java = Dir.glob('java/**/*.java').join(' ')
-  system("javac -d demiurgeBase #{java}")
-  FileUtils.rm_f('lib/java/demiurgeBase.jar')
-  FileUtils.cd('demiurgeBase')
-  system('jar cf ../lib/java/demiurgeBase.jar *')
-  FileUtils.cd('..')
-  FileUtils.rm_rf('demiurgeBase')
-  system('warble; java -jar demiurge.jar')
-end
+task :test => [:build, :run]
 
 # Default to build and run.
 task :default => :test

@@ -32,7 +32,7 @@ def build_release_zip(java_version)
   java_import java.nio.file.Paths
   java_import java.util.zip.ZipEntry
   java_import java.util.zip.ZipOutputStream
-  name = "demiurge-#{SES::Demiurge::VERSION}-release#{java_version}.zip"
+  name = "demiurge.v#{SES::Demiurge::VERSION}-release#{java_version}.zip"
   file = java.io.File.new(name)
   output = ZipOutputStream.new(FileOutputStream.new(file))
   output.put_next_entry(ZipEntry.new('demiurge.jar'))
@@ -61,8 +61,8 @@ end
 # Builds release zip files for Java 7 and Java 8.
 task :build_releases do
   require 'lib/version.rb'
-  rm_f("demiurge-#{SES::Demiurge::VERSION}-release_java17.zip")
-  rm_f("demiurge-#{SES::Demiurge::VERSION}-release_java18.zip")
+  rm_f("demiurge.v#{SES::Demiurge::VERSION}-release_java17.zip")
+  rm_f("demiurge.v#{SES::Demiurge::VERSION}-release_java18.zip")
   mkdir_p('demiurgeBase')
   mkdir_p('lib/java')
   sh "PATH=#{JAVA_17}/bin && JAVA_HOME=#{JAVA_17} && 

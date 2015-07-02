@@ -65,6 +65,7 @@ module Updater
         entry = zip_contents.next_entry
         next
       end
+      FileUtils.mkdir_p(zip_file[/(.+?)\/[^\/]+\.\w+$/, 1])
       output = FileOutputStream.new(zip_file)  
       while ((i = zip_contents.read(buffer, 0, 1024)) > -1)
         output.write(buffer, 0, i)

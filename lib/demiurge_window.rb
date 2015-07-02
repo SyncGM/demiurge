@@ -575,8 +575,10 @@ class DemiurgeWindow < com.github.sesvxace.demiurge.MainWindow
       end
     }
     @plugin_table.selection_model.add_list_selection_listener(listener)
-    @plugin_table.set_row_selection_interval(0, 0)
-    @plugin_description.text = @known_plugins[@known_plugins.keys.sort[0]][0]
+    if @known_plugins.size > 0
+      @plugin_table.set_row_selection_interval(0, 0)
+      @plugin_description.text = @known_plugins[@known_plugins.keys.sort[0]][0]
+    end
     @plugin_description.line_wrap = true
     @plugin_description.wrap_style_word = true
     @plugin_table.revalidate

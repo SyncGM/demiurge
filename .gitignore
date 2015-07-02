@@ -2,6 +2,7 @@
 updates
 *.form
 *.class
+*.zip
 demiurge.jar
 plugins
 settings

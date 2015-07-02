@@ -4,8 +4,15 @@ $LOAD_PATH.unshift($ROOT_DIR + '/lib')
 
 # If Java updates have been released, use those. Otherwise, use the packaged
 # versions.
-if FileTest.directory?('updates/java') then $CLASSPATH << 'updates/java'
-else require 'java/demiurgeBase.jar' end
+if FileTest.directory?('updates/java')
+  if ENV_JAVA['java.runtime.version']['1.7']
+    $CLASSPATH << 'updates/java/1.7'
+  else
+    $CLASSPATH << 'updates/java/1.8'
+  end
+else
+  require 'java/demiurgeBase.jar'
+end
 
 # Require some basic necessities.
 require 'eidolon/rgss3'

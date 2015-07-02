@@ -3,7 +3,7 @@
 Demiurge is a program designed to simplify the management of the popular
 "Note tag" style of script configuration. It is also capable of acting as an
 extensible database if one possesses a basic knowledge of the way that JRuby
-interfaces with Java|scripters can even make use of Swing GUI designers to
+interfaces with Java -- scripters can even make use of Swing GUI designers to
 create custom tags, reducing both the amount of work involved and the knowledge
 of Java required.
 
